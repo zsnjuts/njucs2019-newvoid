@@ -6,7 +6,7 @@ var cnt = 0
 function dfs(nums, equation) {
     if(nums.length <= 0){
         r = eval(equation) == result
-        console.log(equation)
+        //console.log(equation)
         cnt++
         if(r) {
             final_equation = equation
