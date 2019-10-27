@@ -3,7 +3,13 @@
 
 鉴于集门票抽奖需要进行的计算较为复杂，我写了一个小脚本来自动计算你和你的小伙伴当前手里的票能不能拼出你想要的数字。
 
-## 使用方法
+## HTML使用方法
+
+直接打开链接http://zsnju.cn/njucs2019-newvoid/，按照提示输入就可以啦
+
+或者把[bin_permutation.html](./bin_permutation.html)和[bin_permutation.js](./bin_permutation.js)下载下来，按照提示使用就可以啦
+
+## Python使用方法
 
 把bin_permutation.py下载下来，在里面找到下面这段代码
 
