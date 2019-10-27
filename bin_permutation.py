@@ -11,7 +11,7 @@ def get_permut(binstrs: List[str], targetstr: str):
     print(f"现有{nums}，正在寻找能够拼出{target}的方法...")
     cals = [add, sub, and_, or_, invert]  # 所有合法运算符
     # 遍历所有可能的后缀表达式
-    for ivt_num in range(len(nums)):  # 取反放在最外层循环，因为可能不需要这么多次取反就可以组合出来
+    for ivt_num in range(len(nums)+1):  # 取反放在最外层循环，因为可能不需要这么多次取反就可以组合出来
         for cal_comb in combinations_with_replacement(cals[0:4], len(nums)-1):
             for permut in permutations(chain(nums, cal_comb, [invert]*ivt_num)):
                 stack = []
