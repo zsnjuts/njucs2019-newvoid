@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" rel="stylesheet">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" rel="stylesheet">
+
+    <script src="bin_permutation.js"></script>
+    <title>集门票小助手</title>
+</head>
+
+<body>
+    <div class="row" style="width:60%; margin:auto;">
+        <div class="col-md-12">
+            <h1>南京大学计算机系2019迎新晚会集门票抽奖小助手</h1>
+        </div>
+    </div>
+    <div class="row" style="width:60%; margin:auto; margin-top: 30px">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-addon">10011(19)的票数</span>
+                <input id="10011" type="number" class="form-control" aria-label="Amount (to the nearest dollar)">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-addon">00011(3)的票数</span>
+                <input id="00011" type="number" class="form-control" aria-label="Amount (to the nearest dollar)">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-addon">01011(11)的票数</span>
+                <input id="01011" type="number" class="form-control" aria-label="Amount (to the nearest dollar)">
+            </div>
+        </div>
+    </div>
+    <div class="row" style="width:30%; margin:auto; margin-top: 30px">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-default" onclick="calculate()">点我查看结果</button>
+            <script>
+                function calculate(){
+                    var input1 = parseInt(document.getElementById("10011").value);  //19
+                    var input2 = parseInt(document.getElementById("00011").value);  //3
+                    var input3 = parseInt(document.getElementById("01011").value);  //11
+                    nums = [];
+                    for(var i=0;i<input1;i++){
+                        nums.push(19);
+                    }
+                    for(var i=0;i<input2;i++){
+                        nums.push(3);
+                    }
+                    for(var i=0;i<input3;i++){
+                        nums.push(11);
+                    }
+                    var dfs_result = dfs(nums, '');
+                    if(dfs_result){
+                        document.getElementById("calc_result").innerText = final_equation+' = 101001';                        
+                    }else{
+                        document.getElementById("calc_result").innerText = '无解';
+                    }
+                }
+            </script>
+        </div>
+        <div class="col-md-6">
+            <p id="calc_result" style="margin:auto"></p>
+        </div>
+    </div>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>

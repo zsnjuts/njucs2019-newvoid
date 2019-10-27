@@ -1,13 +1,13 @@
 var nums = [19, 19, 19, 19]
 var result = 41
 var final_equation = ""
-var cnt = 0
+// var cnt = 0
 
 function dfs(nums, equation) {
     if(nums.length <= 0){
         r = eval(equation) == result
         //console.log(equation)
-        cnt++
+        // cnt++
         if(r) {
             final_equation = equation
         }
@@ -45,5 +45,5 @@ function dfs(nums, equation) {
     return false
 }
 
-r = dfs(nums,"")
-console.log(r, final_equation, cnt)
+// r = dfs(nums,"")
+// console.log(r, final_equation, cnt)
