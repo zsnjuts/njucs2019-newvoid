@@ -41,9 +41,9 @@
             </div>
         </div>
     </div>
-    <div class="row" style="width:30%; margin:auto; margin-top: 30px">
-        <div class="col-md-6">
-            <button type="button" class="btn btn-default" onclick="calculate()">点我查看结果</button>
+    <div class="row" style="width:60%; margin:auto; margin-top: 30px">
+        <div class="col-md-12">
+            <center><button type="button" class="btn btn-default" onclick="calculate()">点我查看结果</button></center>
             <script>
                 function calculate(){
                     var input1 = parseInt(document.getElementById("10011").value);  //19
@@ -68,10 +68,17 @@
                 }
             </script>
         </div>
-        <div class="col-md-6">
-            <p id="calc_result" style="margin:auto"></p>
-        </div>
     </div>
+	<div class="row" style="width:60%; margin:auto; margin-top: 30px">
+		<div class="col-md-12">
+            <center><p id="calc_result" style="margin:auto"></p></center>
+        </div>
+	</div>
+	<div style="width:60%; margin:auto; margin-top: 100px">
+		<p>
+			<center>Supported by <a href="https://github.com/zsnjuts">@zsnjuts</a> and <a href="https://github.com/Kylin0123">@Kylin0123</a></center>
+		</p>
+	</div>
     <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
