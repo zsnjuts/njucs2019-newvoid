@@ -99,14 +99,30 @@ def find_bin_permutation(bin_strs: List[str], target_str: str = '101001'):
     """找到合法的后缀表达式，bin_strs为现在有哪些二进制串，target_str为想要拼成哪个二进制串，不填则默认为101001"""
     target = int(target_str, base=2)
     nums = list(map(partial(int, base=2), bin_strs))  # 计算二进制串相应的值
-    uny_op_dict = {invert: '~'}  # 可使用的一元运算符及其字符串表示
-    bin_op_dict = {add: '+', sub: '-', and_: '&', or_: '|'}  # 可使用的二元运算符及其字符串表示
+    # 可使用的二元运算符及其字符串表示
+    bin_op_dict = {add: '+', sub: '-', and_: '&', or_: '|'}
+
+    # 可使用的一元运算符及其字符串表示，按照取反后为负数寻找解
+    uny_op_dict = {invert: '~'}  # 默认的取反运算符，取反后为负数
     postexpr = get_postexpr(nums, target, uny_op_dict.keys(), bin_op_dict.keys())
+    print("-----取反为负时的结果-----")
     if len(postexpr) == 0:  # 元组为空则没有可用组合
-        print("没有可用的组合")
+        print("取反为负时，没有可用的组合")
     else:
         print(f"后缀表达式为{postexpr}")
         bin_ans, dec_ans = postexpr2str(postexpr, uny_op_dict, bin_op_dict)
+        print(f"结果为{bin_ans}，对应的十进制表示为{dec_ans}")
+
+    # 可使用的一元运算符及其字符串表示，按照取反后为正数寻找解
+    invert_pos = (lambda x: ~(x | (-1 << x.bit_length())))  # 自定义的一元运算符，取反后仍然为正数，用^表示
+    uny_op_dict_pos = {invert_pos: '^'}  # 可使用的一元运算符及其字符串表示
+    postexpr = get_postexpr(nums, target, uny_op_dict_pos.keys(), bin_op_dict.keys())
+    print("-----取反为正时的结果-----")
+    if len(postexpr) == 0:  # 元组为空则没有可用组合
+        print("取反为正时，没有可用的组合")
+    else:
+        print(f"后缀表达式为{postexpr}")
+        bin_ans, dec_ans = postexpr2str(postexpr, uny_op_dict_pos, bin_op_dict)
         print(f"结果为{bin_ans}，对应的十进制表示为{dec_ans}")
 
 
