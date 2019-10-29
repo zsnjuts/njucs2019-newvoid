@@ -1,10 +1,12 @@
 from functools import partial
 from itertools import combinations
 from operator import add, sub, and_, or_, invert
-from typing import List, Iterable, Callable
+from typing import List, Iterable, Callable, Tuple, Dict, Iterator
 
 
-def get_permut_dfs(nums: List[int], uny_ops: Iterable[Callable[[int], int]], bin_ops: Iterable[Callable[[int, int], int]]):
+def get_postexpr_dfs(nums: List[int],
+                     uny_ops: Iterable[Callable[[int], int]], bin_ops: Iterable[Callable[[int, int], int]]) \
+        -> Iterator[Tuple[int or Callable]]:
     """递归地搜索所有合法后缀表达式，返回Iterable，nums为操作数，uny_ops为一元运算符，bin_ops为二元运算符
     使用了yield，以避免内存开销过高，而且调用者找到解后停止后此函数就可以直接停止，从而避免遍历整个解空间"""
     if len(nums) <= 1:
@@ -18,8 +20,8 @@ def get_permut_dfs(nums: List[int], uny_ops: Iterable[Callable[[int], int]], bin
                 mark[c] = True
             nums1 = [nums[i] for i in range(len(nums)) if mark[i]]  # 子树1
             nums2 = [nums[i] for i in range(len(nums)) if not mark[i]]  # 子树2
-            eqs1 = get_permut_dfs(nums1, uny_ops, bin_ops)
-            eqs2 = get_permut_dfs(nums2, uny_ops, bin_ops)
+            eqs1 = get_postexpr_dfs(nums1, uny_ops, bin_ops)
+            eqs2 = get_postexpr_dfs(nums2, uny_ops, bin_ops)
             for eq1 in eqs1:
                 for eq2 in eqs2:
                     for bop in bin_ops:
@@ -30,13 +32,13 @@ def get_permut_dfs(nums: List[int], uny_ops: Iterable[Callable[[int], int]], bin
                             yield eq2 + eq1 + (bop, uop)
 
 
-def get_permut(binstrs: List[str], targetstr: str):
-    """找到合法的后缀表达式，binstrs为现在有哪些二进制串，targetstr为想要拼成哪个二进制串"""
-    target = int(targetstr, base=2)
-    nums = list(map(partial(int, base=2), binstrs))  # 计算二进制串相应的值
-    uny_ops = [invert]  # 一元运算符
-    bin_ops = [add, sub, and_, or_]  # 二元运算符
-    for equation in get_permut_dfs(nums, uny_ops, bin_ops):
+def get_postexpr(nums: List[int], target: int,
+                 uny_ops: Iterable[Callable[[int], int]], bin_ops: Iterable[Callable[[int, int], int]]) \
+        -> Tuple[int or Callable]:
+    """寻找操作数nums与一元运算符uny_ops，二元运算符bin_ops所能构成的所有后缀表达式中结果为target的表达式
+    通过调用get_postexpr_dfs遍历所能构成的所有后缀表达式，结果为target就直接返回
+    如果想要得到所有可行解，把return的所有equation收集起来即可"""
+    for equation in get_postexpr_dfs(nums, uny_ops, bin_ops):
         stack = []
         for p in equation:
             if isinstance(p, int):
@@ -61,24 +63,25 @@ def get_permut(binstrs: List[str], targetstr: str):
     return tuple()  # 无解，返回空元组
 
 
-def permut2str(permut):
-    """将后缀表达式转为正常表达式"""
-    uny_op_str = {invert: '~'}  # 一元操作符对应的字符串表示，这里默认一元操作符都放在操作数前面
-    bin_op_str = {add: '+', sub: '-', and_: '&', or_: '|'}  # 二元操作符对应的字符串表示
+def postexpr2str(postexpr: Tuple[int or Callable],
+                 uny_op_str: Dict[Callable[[int], int], str], bin_op_str: Dict[Callable[[int, int], int], str]) \
+        -> Tuple[str, str]:
+    """将后缀表达式转为正常表达式，uny_op_str与bin_op_str分别为一元运算符和二元运算符对应的字符串表示
+    注意这里默认一元操作符都放在操作数前面"""
     bin_stack, dec_stack = [], []  # 分别用二进制和十进制表示数字，执行完全一样的操作
-    for p in permut:
+    for p in postexpr:
         if isinstance(p, int):
             bin_stack.append(bin(p)[2:])
             dec_stack.append(str(p))
         else:
             if len(bin_stack) < 1:
-                return ""
+                return "", ""
             elif len(bin_stack) < 2:
                 if p in uny_op_str:
                     bin_stack[-1] = f"{uny_op_str[p]}({bin_stack[-1]})"
                     dec_stack[-1] = f"{uny_op_str[p]}({dec_stack[-1]})"
                 else:
-                    return ""
+                    return "", ""
             else:
                 if p in uny_op_str:
                     bin_stack[-1] = f"{uny_op_str[p]}({bin_stack[-1]})"
@@ -92,11 +95,20 @@ def permut2str(permut):
         return "", ""
 
 
-if __name__ == '__main__':
-    permut = get_permut(['10011', '00011', '01011', '01011'], '101001')
-    if len(permut) == 0:  # 元组为空则没有可用组合
+def find_bin_permutation(bin_strs: List[str], target_str: str = '101001'):
+    """找到合法的后缀表达式，bin_strs为现在有哪些二进制串，target_str为想要拼成哪个二进制串，不填则默认为101001"""
+    target = int(target_str, base=2)
+    nums = list(map(partial(int, base=2), bin_strs))  # 计算二进制串相应的值
+    uny_op_dict = {invert: '~'}  # 可使用的一元运算符及其字符串表示
+    bin_op_dict = {add: '+', sub: '-', and_: '&', or_: '|'}  # 可使用的二元运算符及其字符串表示
+    postexpr = get_postexpr(nums, target, uny_op_dict.keys(), bin_op_dict.keys())
+    if len(postexpr) == 0:  # 元组为空则没有可用组合
         print("没有可用的组合")
     else:
-        print(f"后缀表达式为{permut}")
-        bin_ans, dec_ans = permut2str(permut)
+        print(f"后缀表达式为{postexpr}")
+        bin_ans, dec_ans = postexpr2str(postexpr, uny_op_dict, bin_op_dict)
         print(f"结果为{bin_ans}，对应的十进制表示为{dec_ans}")
+
+
+if __name__ == '__main__':
+    find_bin_permutation(['10011', '00011', '01011', '01011'])
