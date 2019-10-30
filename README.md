@@ -5,7 +5,7 @@
 
 ## HTML使用方法
 
-直接打开链接[http://zsnju.cn/njucs2019-newvoid/](http://zsnju.cn/njucs2019-newvoid/)，按照提示输入就可以啦
+直接打开链接[http://zsnju.cn/newvoid/](http://zsnju.cn/newvoid/)，按照提示输入就可以啦
 
 或者把[bin_permutation.html](./bin_permutation.html)和[bin_permutation.js](./bin_permutation.js)下载下来，按照提示使用就可以啦
 
